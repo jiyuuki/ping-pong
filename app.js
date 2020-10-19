@@ -1,14 +1,31 @@
-let canvas  = document.getElementById('canvas');
-let ctx     = canvas.getContext('2d');
-let ballX   = 5;
-let ballY   = 5;
-let speedX  = 5;
-let speedY  = 5;
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+let ballX = 5;
+let ballY = 5;
+let speedX = 5;
+let speedY = 5;
 
 const createShapes = (color, xPosition, yPosition, width, height) => {
     ctx.fillStyle = color;
     ctx.fillRect(xPosition, yPosition, width, height);
-}   
+}
+
+let createCircle = (centerX, centerY, raduis, color) => {
+    console.log(centerX, centerY, raduis, color);
+    ctx.fillStyle = color;
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, raduis, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+}
+
+let moveBall = () => {
+    ballX = ballX + speedX;
+    if (ballX > canvas.width || ballX < 0) {
+        speedX = -speedX;
+    }
+}
 
 let setUpGame = () => {
     // create table
@@ -16,30 +33,15 @@ let setUpGame = () => {
     // create right racket
     createShapes('#00f3ff', canvas.width, 100, -10, 150);
     // create left racket
-    createShapes('#00f3ff', 0, 20, 10, 150 );
+    createShapes('#00f3ff', 0, 20, 10, 150);
+    // create ball
+    createCircle(ballX + 5, 100, 5, '#f0f0f0');
 }
 
-let moveBall = () => {
-    ballX = ballX + speedX;
-    if(ballX > canvas.width || ballX < 0){
-        speedX = -speedX;
-    }
-}
-
-let createBall = () => {
-    ctx.fillStyle = '#f0f0f0';
-    ctx.strokeStyle = '#f0f0f0';
-    ctx.beginPath();
-    ctx.arc(ballX + 5,  100, 5, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.stroke();
-}
-
-let animateBall = () => {
+let animation = () => {
     setInterval(() => {
         setUpGame();
-        createBall();
         moveBall();
-    },20);
+    }, 20);
 }
-animateBall();
+animation();
