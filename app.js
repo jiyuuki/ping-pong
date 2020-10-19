@@ -1,7 +1,7 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let ballX = 5;
-let ballY = 5;
+let ballX = 33;
+let ballY = 98;
 let speedX = 5;
 let speedY = 5;
 
@@ -11,7 +11,6 @@ const createShapes = (color, xPosition, yPosition, width, height) => {
 }
 
 let createCircle = (centerX, centerY, raduis, color) => {
-    console.log(centerX, centerY, raduis, color);
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.beginPath();
@@ -25,6 +24,10 @@ let moveBall = () => {
     if (ballX > canvas.width || ballX < 0) {
         speedX = -speedX;
     }
+    ballY = ballY + speedY;
+    if (ballY > canvas.height || ballY < 0) {
+        speedY = -speedY;
+    }
 }
 
 let setUpGame = () => {
@@ -35,7 +38,7 @@ let setUpGame = () => {
     // create left racket
     createShapes('#00f3ff', 0, 20, 10, 150);
     // create ball
-    createCircle(ballX + 5, 100, 5, '#f0f0f0');
+    createCircle(ballX, ballY, 5, '#f0f0f0');
 }
 
 let animation = () => {
