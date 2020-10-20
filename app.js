@@ -50,7 +50,7 @@ let moveBall = () => {
 
 let setUpGame = () => {
     // create table
-    createShapes('black', 0, 10, canvas.width, canvas.height);
+    createShapes('black', 0, 0, canvas.width, canvas.heightgt);
     // create right racket
     createShapes('#f0f0f0', canvas.width, rightPlayer, -10, RACKET_HEIGHT);
     // create left racket
