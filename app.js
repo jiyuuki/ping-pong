@@ -1,11 +1,29 @@
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
-let ballX = 33;
-let ballY = 98;
-let speedX = 5;
+let ballX = 50;
+let ballY = 50;
+let speedX = 10;
 let speedY = 5;
+let leftPlayer = 250;
+let rightPlayer = 250;
+const RACKET_HEIGHT = 100;
 
-const createShapes = (color, xPosition, yPosition, width, height) => {
+let getMousePosition = (event) => {
+    let mousePosition = {
+        right: (event.clientX - canvas.getBoundingClientRect().left - document.documentElement.scrollLeft) - (RACKET_HEIGHT / 2),
+        left: (event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop) - (RACKET_HEIGHT / 2)
+    }
+    return mousePosition;
+}
+
+// Playe mouvement
+canvas.addEventListener('mousemove', (event) => {
+    let mousePosition = getMousePosition(event);
+    leftPlayer = mousePosition.left;
+    rightPlayer = mousePosition.right;
+});
+
+let createShapes = (color, xPosition, yPosition, width, height) => {
     ctx.fillStyle = color;
     ctx.fillRect(xPosition, yPosition, width, height);
 }
@@ -20,11 +38,11 @@ let createCircle = (centerX, centerY, raduis, color) => {
 }
 
 let moveBall = () => {
-    ballX = ballX + speedX;
+    ballX += speedX;
     if (ballX > canvas.width || ballX < 0) {
         speedX = -speedX;
     }
-    ballY = ballY + speedY;
+    ballY += speedY;
     if (ballY > canvas.height || ballY < 0) {
         speedY = -speedY;
     }
@@ -34,17 +52,17 @@ let setUpGame = () => {
     // create table
     createShapes('black', 0, 10, canvas.width, canvas.height);
     // create right racket
-    createShapes('#00f3ff', canvas.width, 100, -10, 150);
+    createShapes('#f0f0f0', canvas.width, rightPlayer, -10, RACKET_HEIGHT);
     // create left racket
-    createShapes('#00f3ff', 0, 20, 10, 150);
+    createShapes('#f0f0f0', 0, leftPlayer, 10, RACKET_HEIGHT);
     // create ball
-    createCircle(ballX, ballY, 5, '#f0f0f0');
+    createCircle(ballX, ballY, 10, '#f0f0f0');
 }
 
 let animation = () => {
     setInterval(() => {
         setUpGame();
         moveBall();
-    }, 20);
+    }, 33);
 }
 animation();
