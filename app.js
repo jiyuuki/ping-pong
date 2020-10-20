@@ -1,4 +1,9 @@
-let canvas = document.getElementById('canvas');
+//#region TODO:
+// reset ball position
+// player vs comptuer
+//#endregion
+
+canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let ballX = 50;
 let ballY = 50;
@@ -7,20 +12,27 @@ let speedY = 5;
 let leftPlayer = 250;
 let rightPlayer = 250;
 const RACKET_HEIGHT = 100;
+const HALF_RACKET_Y = RACKET_HEIGHT / 2;
+const HALF_CANVAS_X = canvas.width / 2;
+const HALF_CANVAS_Y = canvas.height / 2;
 
 let getMousePosition = (event) => {
     let mousePosition = {
-        right: (event.clientX - canvas.getBoundingClientRect().left - document.documentElement.scrollLeft) - (RACKET_HEIGHT / 2),
-        left: (event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop) - (RACKET_HEIGHT / 2)
+        right: event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y,
+        left: event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y
     }
     return mousePosition;
 }
 
-// Playe mouvement
 canvas.addEventListener('mousemove', (event) => {
     let mousePosition = getMousePosition(event);
-    leftPlayer = mousePosition.left;
-    rightPlayer = mousePosition.right;
+    if (event.clientX < HALF_CANVAS_X) {
+        leftPlayer = mousePosition.left;
+        rightPlayer = HALF_CANVAS_Y;
+    } else {
+        leftPlayer = HALF_CANVAS_Y;
+        rightPlayer = mousePosition.left;
+    }
 });
 
 let createShapes = (color, xPosition, yPosition, width, height) => {
@@ -50,7 +62,7 @@ let moveBall = () => {
 
 let setUpGame = () => {
     // create table
-    createShapes('black', 0, 0, canvas.width, canvas.heightgt);
+    createShapes('black', 0, 0, canvas.width, canvas.height);
     // create right racket
     createShapes('#f0f0f0', canvas.width, rightPlayer, -10, RACKET_HEIGHT);
     // create left racket
