@@ -10,10 +10,13 @@ let speedX = 10;
 let speedY = 5;
 let leftPlayer = 250;
 let rightPlayer = 250;
+let scoreLeftPlayer = 0;
+let scoreRightPlayer = 0;
 const RACKET_HEIGHT = 100;
 const HALF_RACKET_Y = RACKET_HEIGHT / 2;
 const HALF_CANVAS_X = canvas.width / 2;
 const HALF_CANVAS_Y = canvas.height / 2;
+
 
 let resetBallPosition = () => {
     ballX = Math.round((Math.random() * canvas.width / 2) / 10) * 10;
@@ -78,6 +81,7 @@ let moveBall = (racketHeight) => {
             speedX = -speedX;
         } else {
             resetBallPosition();
+            scoreRightPlayer++;
         }
     }
 
@@ -86,6 +90,7 @@ let moveBall = (racketHeight) => {
             speedX = -speedX;
         } else {
             resetBallPosition();
+            scoreLeftPlayer++;
         }
     }
 
@@ -107,6 +112,10 @@ let setUpGame = () => {
 
     // create ball
     createCircle(ballX, ballY, 10, '#f0f0f0');
+
+    //scoring
+    ctx.fillText(scoreLeftPlayer, 100, 100);
+    ctx.fillText(scoreRightPlayer, canvas.width - 100, 100);
 }
 
 let animation = () => {
