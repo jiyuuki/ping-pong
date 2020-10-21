@@ -1,5 +1,6 @@
 //#region TODO:
 // create function movePlayer to move left, right player and /or comptuer
+// game over and restart party
 //#endregion
 
 canvas = document.getElementById('canvas');
@@ -19,6 +20,10 @@ const HALF_CANVAS_Y = canvas.height / 2;
 
 
 let resetBallPosition = () => {
+    if (scoreLeftPlayer >= 3 || scoreRightPlayer >= 3) {
+        scoreLeftPlayer = 0;
+        scoreRightPlayer = 0;
+    }
     ballX = Math.round((Math.random() * canvas.width / 2) / 10) * 10;
     ballY = Math.round((Math.random() * canvas.height / 2) / 10) * 10;;
 }
@@ -72,6 +77,9 @@ let computerPlay = () => {
         rightPlayer -= 6;
     }
 }
+let ballControl = (ballPositionY, player, racketHeight) => {
+    return (ballPositionY - (player + racketHeight / 2)) * 0.50;
+}
 
 let moveBall = (racketHeight) => {
     // computerPlay();
@@ -79,18 +87,20 @@ let moveBall = (racketHeight) => {
     if (ballX < 0) {
         if (ballInRacket(ballY, leftPlayer, racketHeight)) {
             speedX = -speedX;
+            speedY = ballControl(ballY, leftPlayer, racketHeight);
         } else {
-            resetBallPosition();
             scoreRightPlayer++;
+            resetBallPosition();
         }
     }
 
     if (ballX > canvas.width) {
         if (ballInRacket(ballY, rightPlayer, racketHeight)) {
             speedX = -speedX;
+            speedY = ballControl(ballY, rightPlayer, racketHeight);
         } else {
-            resetBallPosition();
             scoreLeftPlayer++;
+            resetBallPosition();
         }
     }
 
