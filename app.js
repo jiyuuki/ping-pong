@@ -1,5 +1,4 @@
 //#region TODO:
-// reset ball position
 // player vs comptuer
 //#endregion
 
@@ -15,6 +14,11 @@ const RACKET_HEIGHT = 100;
 const HALF_RACKET_Y = RACKET_HEIGHT / 2;
 const HALF_CANVAS_X = canvas.width / 2;
 const HALF_CANVAS_Y = canvas.height / 2;
+
+let resetBallPosition = () => {
+    ballX = Math.round((Math.random() * canvas.width / 2) / 10) * 10;
+    ballY = Math.round((Math.random() * canvas.height / 2) / 10) * 10;;
+}
 
 let getMousePosition = (event) => {
     let mousePosition = {
@@ -49,11 +53,32 @@ let createCircle = (centerX, centerY, raduis, color) => {
     ctx.stroke();
 }
 
-let moveBall = () => {
-    ballX += speedX;
-    if (ballX > canvas.width || ballX < 0) {
-        speedX = -speedX;
+let ballInRacket = (ballPositionY, player, racketHeight) => {
+    if (ballPositionY > player && ballPositionY < player + racketHeight) {
+        return true;
+    } else {
+        return false;
     }
+}
+
+let moveBall = (racketHeight) => {
+    ballX += speedX;
+    if (ballX < 0) {
+        if (ballInRacket(ballY, leftPlayer, racketHeight)) {
+            speedX = -speedX;
+        } else {
+            resetBallPosition();
+        }
+    }
+
+    if (ballX > canvas.width) {
+        if (ballInRacket(ballY, rightPlayer, racketHeight)) {
+            speedX = -speedX;
+        } else {
+            resetBallPosition();
+        }
+    }
+
     ballY += speedY;
     if (ballY > canvas.height || ballY < 0) {
         speedY = -speedY;
@@ -74,7 +99,7 @@ let setUpGame = () => {
 let animation = () => {
     setInterval(() => {
         setUpGame();
-        moveBall();
+        moveBall(RACKET_HEIGHT);
     }, 33);
 }
 animation();
