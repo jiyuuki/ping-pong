@@ -71,7 +71,7 @@ let computerPlay = () => {
 }
 
 let moveBall = (racketHeight) => {
-    computerPlay();
+    // computerPlay();
     ballX += speedX;
     if (ballX < 0) {
         if (ballInRacket(ballY, leftPlayer, racketHeight)) {
