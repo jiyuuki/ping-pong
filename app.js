@@ -1,5 +1,5 @@
 //#region TODO:
-// player vs comptuer
+// create function movePlayer to move left, right player and /or comptuer
 //#endregion
 
 canvas = document.getElementById('canvas');
@@ -61,7 +61,17 @@ let ballInRacket = (ballPositionY, player, racketHeight) => {
     }
 }
 
+let computerPlay = () => {
+    let racketCenter = rightPlayer + RACKET_HEIGHT / 2;
+    if (racketCenter < ballY - 35) {
+        rightPlayer += 6;
+    } else if (racketCenter > ballY + 35) {
+        rightPlayer -= 6;
+    }
+}
+
 let moveBall = (racketHeight) => {
+    computerPlay();
     ballX += speedX;
     if (ballX < 0) {
         if (ballInRacket(ballY, leftPlayer, racketHeight)) {
@@ -88,10 +98,13 @@ let moveBall = (racketHeight) => {
 let setUpGame = () => {
     // create table
     createShapes('black', 0, 0, canvas.width, canvas.height);
+
     // create right racket
     createShapes('#f0f0f0', canvas.width, rightPlayer, -10, RACKET_HEIGHT);
+
     // create left racket
     createShapes('#f0f0f0', 0, leftPlayer, 10, RACKET_HEIGHT);
+
     // create ball
     createCircle(ballX, ballY, 10, '#f0f0f0');
 }
