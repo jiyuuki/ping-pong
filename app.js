@@ -1,6 +1,6 @@
 //#region TODO:
-// create function movePlayer to move left, right player and /or comptuer
-// game over and restart party
+// create function ;movePlayer; to move left, right player and /or comptuer
+// create  function ;endGame; ;restartParty; ;resetScore;
 //#endregion
 
 canvas = document.getElementById('canvas');
@@ -13,6 +13,7 @@ let leftPlayer = 250;
 let rightPlayer = 250;
 let scoreLeftPlayer = 0;
 let scoreRightPlayer = 0;
+let winScreen = false;
 const RACKET_HEIGHT = 100;
 const HALF_RACKET_Y = RACKET_HEIGHT / 2;
 const HALF_CANVAS_X = canvas.width / 2;
@@ -20,9 +21,18 @@ const HALF_CANVAS_Y = canvas.height / 2;
 
 
 let resetBallPosition = () => {
+    // endGame
+    let winPlayern = scoreLeftPlayer >= 3 ? 'left player win' : 'right player win';
     if (scoreLeftPlayer >= 3 || scoreRightPlayer >= 3) {
+        // resetScore
         scoreLeftPlayer = 0;
         scoreRightPlayer = 0;
+        // restartPary
+        createShapes('red', 0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'white';
+        ctx.fillText('click to restart', canvas.width / 2, 500);
+        ctx.fillText(winPlayern, canvas.width / 2, 100);
+        winScreen = true;
     }
     ballX = Math.round((Math.random() * canvas.width / 2) / 10) * 10;
     ballY = Math.round((Math.random() * canvas.height / 2) / 10) * 10;;
@@ -47,9 +57,22 @@ canvas.addEventListener('mousemove', (event) => {
     }
 });
 
+canvas.addEventListener('mousedown', (event) => {
+    if (winScreen) {
+        scoreLeftPlayer = 0;
+        scoreRightPlayer = 0;
+    }
+    winScreen = false;
+});
+
 let createShapes = (color, xPosition, yPosition, width, height) => {
     ctx.fillStyle = color;
     ctx.fillRect(xPosition, yPosition, width, height);
+}
+let drawNet = () => {
+    for (let index = 0; index < canvas.height; index += 40) {
+        createShapes('#f0f0f0', canvas.width / 2, index, 2, 20);
+    }
 }
 
 let createCircle = (centerX, centerY, raduis, color) => {
@@ -82,7 +105,12 @@ let ballControl = (ballPositionY, player, racketHeight) => {
 }
 
 let moveBall = (racketHeight) => {
+    if (winScreen) {
+        return;
+    }
+
     // computerPlay();
+
     ballX += speedX;
     if (ballX < 0) {
         if (ballInRacket(ballY, leftPlayer, racketHeight)) {
@@ -113,6 +141,7 @@ let moveBall = (racketHeight) => {
 let setUpGame = () => {
     // create table
     createShapes('black', 0, 0, canvas.width, canvas.height);
+    drawNet();
 
     // create right racket
     createShapes('#f0f0f0', canvas.width, rightPlayer, -10, RACKET_HEIGHT);
@@ -130,8 +159,10 @@ let setUpGame = () => {
 
 let animation = () => {
     setInterval(() => {
-        setUpGame();
         moveBall(RACKET_HEIGHT);
+        if (!winScreen) {
+            setUpGame();
+        }
     }, 33);
 }
 animation();
