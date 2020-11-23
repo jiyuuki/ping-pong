@@ -1,8 +1,3 @@
-//#region TODO:
-// create function ;movePlayer; to move left, right player and /or comptuer
-// create  function ;endGame; ;restartParty; ;resetScore;
-//#endregion
-
 canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let ballX = 50;
@@ -22,13 +17,13 @@ const HALF_CANVAS_Y = canvas.height / 2;
 /**
  * reset ball position and restart the score
  */
-let resetBallPosition = () => {
-    // endGame
+let endGame = () => {
     let winPlayern = scoreLeftPlayer >= 3 ? 'left player win' : 'right player win';
     if (scoreLeftPlayer >= 3 || scoreRightPlayer >= 3) {
         // resetScore
         scoreLeftPlayer = 0;
         scoreRightPlayer = 0;
+        
         // restartPary
         createShapes('red', 0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white';
@@ -42,40 +37,16 @@ let resetBallPosition = () => {
 
 /**
  * get the current mouse position
- * @param {*} event 
+ * @param {*} mouseEvent 
  */
-let getMousePosition = (event) => {
+
+let getMousePosition = (mouseEvent) => {
     let mousePosition = {
-        right: event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y,
-        left: event.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y
+        right: mouseEvent.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y,
+        left: mouseEvent.clientY - canvas.getBoundingClientRect().top - document.documentElement.scrollTop - HALF_RACKET_Y
     }
     return mousePosition;
 }
-
-/**
- * event mouse move to animate left and right player
- */
-canvas.addEventListener('mousemove', (event) => {
-    let mousePosition = getMousePosition(event);
-    if (event.clientX < HALF_CANVAS_X) {
-        leftPlayer = mousePosition.left;
-        rightPlayer = HALF_CANVAS_Y;
-    } else {
-        leftPlayer = HALF_CANVAS_Y;
-        rightPlayer = mousePosition.left;
-    }
-});
-
-/**
- * event mouse douwn to restart game
- */
-canvas.addEventListener('mousedown', (event) => {
-    if (winScreen) {
-        scoreLeftPlayer = 0;
-        scoreRightPlayer = 0;
-    }
-    winScreen = false;
-});
 
 /**
  * create shapes on canvas
@@ -169,7 +140,7 @@ let moveBall = (racketHeight) => {
             speedY = ballControl(ballY, leftPlayer, racketHeight);
         } else {
             scoreRightPlayer++;
-            resetBallPosition();
+            endGame();
         }
     }
 
@@ -179,7 +150,7 @@ let moveBall = (racketHeight) => {
             speedY = ballControl(ballY, rightPlayer, racketHeight);
         } else {
             scoreLeftPlayer++;
-            resetBallPosition();
+            endGame();
         }
     }
 
@@ -188,6 +159,31 @@ let moveBall = (racketHeight) => {
         speedY = -speedY;
     }
 }
+
+/**
+ * event mouse move to animate left and right player
+ */
+canvas.addEventListener('mousemove', (event) => {
+    let mousePosition = getMousePosition(event);
+    if (event.clientX < HALF_CANVAS_X) {
+        leftPlayer = mousePosition.left;
+        rightPlayer = HALF_CANVAS_Y;
+    } else {
+        leftPlayer = HALF_CANVAS_Y;
+        rightPlayer = mousePosition.left;
+    }
+});
+
+/**
+ * event mouse douwn to restart game
+ */
+canvas.addEventListener('mousedown', (event) => {
+    if (winScreen) {
+        scoreLeftPlayer = 0;
+        scoreRightPlayer = 0;
+    }
+    winScreen = false;
+});
 
 /**
  * set up the game
@@ -206,7 +202,7 @@ let setUpGame = () => {
     // create ball
     createCircle(ballX, ballY, 10, '#f0f0f0');
 
-    //scoring
+    // scoring
     ctx.fillText(scoreLeftPlayer, 100, 100);
     ctx.fillText(scoreRightPlayer, canvas.width - 100, 100);
 }
